@@ -1,4 +1,4 @@
-package database
+package zerologgorm
 
 import (
 	"context"
@@ -140,8 +140,6 @@ func (l Logger) Trace(ctx context.Context, begin time.Time, f func() (string, in
 	}
 
 	event.Send()
-
-	return
 }
 
 func (l Logger) ParamsFilter(_ context.Context, sql string, params ...interface{}) (string, []interface{}) {
