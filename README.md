@@ -22,9 +22,9 @@ To use `zerologgorm` in your Go project, you need to have Go installed (version 
 You can install the library using `go get`:
 
 ```bash
-go get github.com/your-repo-path/zerologgorm
+go get github.com/skynet2/zerolog-gorm
 ```
-*(Adjust `github.com/your-repo-path/zerologgorm` to the actual import path of your library.)*
+*(Adjust `github.com/skynet2/zerolog-gorm` to the actual import path of your library.)*
 
 ## Usage
 
@@ -34,12 +34,12 @@ Here's how you can initialize and use `zerologgorm` with GORM:
 package main
 
 import (
-	"context" // Added import for context
+	"context"
 	"os"
 	"time"
 
 	"github.com/rs/zerolog"
-	"github.com/your-repo-path/zerologgorm" // Adjust import path
+	"github.com/skynet2/zerolog-gorm"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -62,36 +62,6 @@ func main() {
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{
 		Logger: newLogger,
 	})
-	if err != nil {
-		// Log the error using your zerolog instance if needed
-		zerologLogger.Fatal().Err(err).Msg("failed to connect database")
-	}
-
-	// Your GORM models and operations
-	type Product struct {
-		gorm.Model
-		Code  string
-		Price uint
-	}
-
-	// Migrate the schema
-	// Use a context with your zerolog logger for context-aware logging
-	ctx := zerologLogger.WithContext(context.Background())
-	db.WithContext(ctx).AutoMigrate(&Product{})
-
-	// Create
-	db.WithContext(ctx).Create(&Product{Code: "D42", Price: 100})
-
-	// Read
-	var product Product
-	db.WithContext(ctx).First(&product, 1) // find product with integer primary key
-	db.WithContext(ctx).First(&product, "code = ?", "D42") // find product with code D42
-
-	// Update - update product's price to 200
-	db.WithContext(ctx).Model(&product).Update("Price", 200)
-
-	// Delete - delete product
-	db.WithContext(ctx).Delete(&product, 1)
 }
 ```
 *Note: The example above uses `context.Background()`. In a real application, you should use the appropriate context for your requests or operations.*
@@ -131,4 +101,3 @@ Please ensure your code follows the existing style.
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
-*(Ensure you have a LICENSE file in your repository, typically containing the MIT License text.)*
