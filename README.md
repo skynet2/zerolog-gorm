@@ -1,5 +1,7 @@
 # zerologgorm
 
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/skynet2/zerolog-gorm)](https://pkg.go.dev/github.com/skynet2/zerolog-gorm?tab=doc)
+
 `zerologgorm` is a GORM logger implementation that uses the [zerolog](https://github.com/rs/zerolog) library for fast and flexible JSON logging. This library allows you to seamlessly integrate GORM's logging capabilities with zerolog, providing a structured and efficient way to log your database interactions.
 
 ## Features
