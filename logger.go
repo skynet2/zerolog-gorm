@@ -32,6 +32,15 @@ type options struct {
 	fieldName         string
 	ignoreNotFoundErr bool
 	slowThreshold     time.Duration
+	logAll            bool
+}
+
+// WithLogAll returns an OptionFn that configures the Logger to log all SQL
+// queries, including those that are not slow or have no errors.
+func WithLogAll() OptionFn {
+	return func(o *options) {
+		o.logAll = true
+	}
 }
 
 // WithIgnoreNotFoundError returns an OptionFn that configures the Logger to
@@ -150,8 +159,11 @@ func (l Logger) apply(event *zerolog.Event) *zerolog.Event {
 func (l Logger) Trace(ctx context.Context, begin time.Time, f func() (string, int64), err error) {
 	logLevel := l.opt.defaultLogLevel
 
+	shouldLog := l.opt.logAll
+
 	if l.opt.slowThreshold > 0 && time.Since(begin) > l.opt.slowThreshold {
 		logLevel = zerolog.WarnLevel
+		shouldLog = true
 	}
 
 	event := zerolog.Ctx(ctx).WithLevel(logLevel)
@@ -162,6 +174,12 @@ func (l Logger) Trace(ctx context.Context, begin time.Time, f func() (string, in
 		}
 
 		event = zerolog.Ctx(ctx).Error().Err(err)
+
+		shouldLog = true
+	}
+
+	if !shouldLog {
+		return
 	}
 
 	if l.opt.skipFrames > 0 {

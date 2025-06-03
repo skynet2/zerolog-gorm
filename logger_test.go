@@ -59,6 +59,7 @@ func TestLogger_Trace_ErrorAndNotFound(t *testing.T) {
 		zerologgorm.WithSlowThreshold(1 * time.Nanosecond),
 		zerologgorm.WithDefaultLogLevel(zerolog.DebugLevel),
 		zerologgorm.WithSqlFieldName("test"),
+		zerologgorm.WithLogAll(),
 	}
 
 	logger, ctx := newTestLogger(buf, commonOpts...)
